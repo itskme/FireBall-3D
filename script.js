@@ -230,3 +230,39 @@ function addWorldTrees(){
 		addTree(false,i*gap, false);
 	}
 }
+function addTree(inPath, row, isLeft){
+	var newTree;
+	if(inPath){
+		if(treesPool.length==0)return;
+		newTree=treesPool.pop();
+		newTree.visible=true;
+		
+		treesInPath.push(newTree);
+		sphericalHelper.set( worldRadius-0.3, pathAngleValues[row], -rollingGroundSphere.rotation.x+4 );
+	}else{
+		newTree=createTree();
+		var forestAreaAngle=0;
+		if(isLeft){
+			forestAreaAngle=1.68+Math.random()*0.1;
+		}else{
+			forestAreaAngle=1.46-Math.random()*0.1;
+		}
+		sphericalHelper.set( worldRadius-0.3, forestAreaAngle, row );
+	}
+	newTree.position.setFromSpherical( sphericalHelper );
+	var rollingGroundVector=rollingGroundSphere.position.clone().normalize();
+	var treeVector=newTree.position.clone().normalize();
+	newTree.quaternion.setFromUnitVectors(treeVector,rollingGroundVector);
+	newTree.rotation.x+=(Math.random()*(2*Math.PI/10))+-Math.PI/10;
+	
+	rollingGroundSphere.add(newTree);
+}
+function createTree(){
+	var sides=8;
+	var tiers=6;
+	var scalarMultiplier=(Math.random()*(0.25-0.1))+0.05;
+	var midPointVector= new THREE.Vector3();
+	var vertexVector= new THREE.Vector3();
+	var treeGeometry = new THREE.ConeGeometry( 0.5, 1, sides, tiers);
+	
+}

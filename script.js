@@ -167,4 +167,66 @@ function addWorld(){
 	var offset= new THREE.Vector3();
 	var currentTier=1;
 	var lerpValue=0.5;
+	var heightValue;
+	var maxHeight=0.07;
+	for(var j=1;j<tiers-2;j++){
+		currentTier=j;
+		for(var i=0;i<sides;i++){
+			vertexIndex=(currentTier*sides)+1;
+			vertexVector=sphereGeometry.vertices[i+vertexIndex].clone();
+			if(j%2!==0){
+				if(i==0){
+					firstVertexVector=vertexVector.clone();
+				}
+				nextVertexVector=sphereGeometry.vertices[i+vertexIndex+1].clone();
+				if(i==sides-1){
+					nextVertexVector=firstVertexVector;
+				}
+				lerpValue=(Math.random()*(0.75-0.25))+0.25;
+				vertexVector.lerp(nextVertexVector,lerpValue);
+			}
+			heightValue=(Math.random()*maxHeight)-(maxHeight/2);
+			offset=vertexVector.clone().normalize().multiplyScalar(heightValue);
+			sphereGeometry.vertices[i+vertexIndex]=(vertexVector.add(offset));
+		}
+	}
+	rollingGroundSphere = new THREE.Mesh( sphereGeometry, sphereMaterial );
+	rollingGroundSphere.receiveShadow = true;
+	rollingGroundSphere.castShadow=false;
+	rollingGroundSphere.rotation.z=-Math.PI/2;
+	scene.add( rollingGroundSphere );
+	rollingGroundSphere.position.y=-24;
+	rollingGroundSphere.position.z=2;
+	addWorldTrees();
+}
+function addLight(){
+	var hemisphereLight = new THREE.HemisphereLight(0x5d782e, 0x000000, 1.9)
+	scene.add(hemisphereLight);
+	sun = new THREE.DirectionalLight( 0xcdc1c5, 0.9);
+	sun.position.set( 12,6,-7 );
+	sun.castShadow = true;
+	scene.add(sun);
+	
+	sun.shadow.mapSize.width = 256;
+	sun.shadow.mapSize.height = 256;
+	sun.shadow.camera.near = 0.5;
+	sun.shadow.camera.far = 50 ;
+}
+function addPathTree(){
+	var options=[0,1,2];
+	var lane= Math.floor(Math.random()*3);
+	addTree(true,lane);
+	options.splice(lane,1);
+	if(Math.random()>0.5){
+		lane= Math.floor(Math.random()*2);
+		addTree(true,options[lane]);
+	}
+}
+function addWorldTrees(){
+	var numTrees=36;
+	var gap=6.28/36;
+	for(var i=0;i<numTrees;i++){
+		addTree(false,i*gap, true);
+		addTree(false,i*gap, false);
+	}
 }

@@ -69,6 +69,35 @@ function createScene(){
 	addWorld();
 	addHero();
 	addLight();
+	addExplosion();
 	
-}
+	camera.position.z = 7.5;
+	camera.position.y = 3;
+	
+	window.addEventListener('resize', onWindowResize, false);
 
+	document.onkeydown = handleKeyDown;
+	
+	scoreText = document.createElement('div');
+	scoreText.style.position = 'absolute'; 
+	scoreText.style.width = 100;
+	scoreText.style.height = 100;
+	scoreText.innerHTML = "0";
+	scoreText.style.top = 50 + 'px';
+	scoreText.style.left = 10 + 'px';
+	document.body.appendChild(scoreText);
+}
+function addExplosion(){
+	particleGeometry = new THREE.Geometry();
+	for (var i = 0; i < particleCount; i ++ ) {
+		var vertex = new THREE.Vector3();
+		particleGeometry.vertices.push( vertex );
+	}
+	var pMaterial = new THREE.ParticleBasicMaterial({
+	  color: 0x5d782e,
+	  size: 0.2
+	});
+	particles = new THREE.Points( particleGeometry, pMaterial );
+	scene.add( particles );
+	particles.visible=false;
+}

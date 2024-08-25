@@ -335,3 +335,44 @@ function tightenTree(vertices,sides,currentTier){
 	}
 }
 
+function update(){
+    rollingGroundSphere.rotation.x += rollingSpeed;
+    heroSphere.rotation.x -= heroRollingSpeed;
+    if(heroSphere.position.y<=heroBaseY){
+    	jumping=false;
+    	bounceValue=(Math.random()*0.04)+0.005;
+    }
+    heroSphere.position.y+=bounceValue;
+    heroSphere.position.x=THREE.Math.lerp(heroSphere.position.x,currentLane, 2*clock.getDelta());
+    bounceValue-=gravity;
+    if(clock.getElapsedTime()>treeReleaseInterval){
+    	clock.start();
+    	addPathTree();
+    	if(!hasCollided){
+			score+=2*treeReleaseInterval;
+			scoreText.innerHTML=score.toString();
+		}
+    }
+    doTreeLogic();
+    doExplosionLogic();
+    render();
+	requestAnimationFrame(update);
+}
+function doTreeLogic(){
+	var oneTree;
+	var treePos = new THREE.Vector3();
+	var treesToRemove=[];
+	treesInPath.forEach( function ( element, index ) {
+		oneTree=treesInPath[ index ];
+		treePos.setFromMatrixPosition( oneTree.matrixWorld );
+		if(treePos.z>6 &&oneTree.visible){
+			treesToRemove.push(oneTree);
+		}else{
+			if(treePos.distanceTo(heroSphere.position)<=0.6){
+				console.log("hit");
+				hasCollided=true;
+				explode();
+			}
+		}
+	});
+}

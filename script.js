@@ -140,3 +140,31 @@ function handleKeyDown(keyEvent){
 		bounceValue=0.06;
 	}
 }
+function addHero(){
+	var sphereGeometry = new THREE.DodecahedronGeometry( heroRadius, 0);
+	var sphereMaterial = new THREE.MeshStandardMaterial( { color: 0x398ccc,shading:THREE.FlatShading} )
+	jumping=false;
+	heroSphere = new THREE.Mesh( sphereGeometry, sphereMaterial );
+	heroSphere.receiveShadow = true;
+	heroSphere.castShadow=true;
+	scene.add( heroSphere );
+	heroSphere.position.y=heroBaseY;
+	heroSphere.position.z=4.8;
+	currentLane=middleLane;
+	heroSphere.position.x=currentLane;
+}
+
+function addWorld(){
+	var sides=40;
+	var tiers=44;
+	var sphereGeometry = new THREE.SphereGeometry( worldRadius, sides,tiers);
+	var sphereMaterial = new THREE.MeshStandardMaterial( { color: 0xfffafa ,shading:THREE.FlatShading} )
+	
+	var vertexIndex;
+	var vertexVector= new THREE.Vector3();
+	var nextVertexVector= new THREE.Vector3();
+	var firstVertexVector= new THREE.Vector3();
+	var offset= new THREE.Vector3();
+	var currentTier=1;
+	var lerpValue=0.5;
+}

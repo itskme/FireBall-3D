@@ -359,31 +359,32 @@ function update(){
 	requestAnimationFrame(update);
 }
 function doTreeLogic(){
-	var oneTree;
-	var treePos = new THREE.Vector3();
-	var treesToRemove=[];
-	treesInPath.forEach( function ( element, index ) {
-		oneTree=treesInPath[ index ];
-		treePos.setFromMatrixPosition( oneTree.matrixWorld );
-		if(treePos.z>6 &&oneTree.visible){
-			treesToRemove.push(oneTree);
-		}else{
-			if(treePos.distanceTo(heroSphere.position)<=0.6){
-				console.log("hit");
-				hasCollided=true;
-				explode();
-			}
-		}
-	});
+    var oneTree;
+    var treePos = new THREE.Vector3();
+    var treesToRemove=[];
+    treesInPath.forEach( function ( element, index ) {
+        oneTree=treesInPath[ index ];
+        treePos.setFromMatrixPosition( oneTree.matrixWorld );
+        if(treePos.z>6 &&oneTree.visible){
+            treesToRemove.push(oneTree);
+        }else{
+            if(treePos.distanceTo(heroSphere.position)<=0.6){
+                console.log("hit");
+                hasCollided=true;
+                explode();
+                gameOver(); 
+            }
+        }
+    });
 	var fromWhere;
-	treesToRemove.forEach( function ( element, index ) {
-		oneTree=treesToRemove[ index ];
-		fromWhere=treesInPath.indexOf(oneTree);
-		treesInPath.splice(fromWhere,1);
-		treesPool.push(oneTree);
-		oneTree.visible=false;
-		console.log("remove tree");
-	});
+    treesToRemove.forEach( function ( element, index ) {
+        oneTree=treesToRemove[ index ];
+        fromWhere=treesInPath.indexOf(oneTree);
+        treesInPath.splice(fromWhere,1);
+        treesPool.push(oneTree);
+        oneTree.visible=false;
+        console.log("remove tree");
+    });
 }
 function doExplosionLogic(){
 	if(!particles.visible)return;
@@ -396,5 +397,33 @@ function doExplosionLogic(){
 		particles.visible=false;
 	}
 	particleGeometry.verticesNeedUpdate = true;
+}
+function explode(){
+	particles.position.y=2;
+	particles.position.z=4.8;
+	particles.position.x=heroSphere.position.x;
+	for (var i = 0; i < particleCount; i ++ ) {
+		var vertex = new THREE.Vector3();
+		vertex.x = -0.2+Math.random() * 0.4;
+		vertex.y = -0.2+Math.random() * 0.4 ;
+		vertex.z = -0.2+Math.random() * 0.4;
+		particleGeometry.vertices[i]=vertex;
+	}
+	explosionPower=1.07;
+	particles.visible=true;
+}
+function render(){
+    renderer.render(scene, camera);
+}
+function gameOver () {
+ 
+}
+function onWindowResize() {
+
+	sceneHeight = window.innerHeight;
+	sceneWidth = window.innerWidth;
+	renderer.setSize(sceneWidth, sceneHeight);
+	camera.aspect = sceneWidth/sceneHeight;
+	camera.updateProjectionMatrix();
 }
 

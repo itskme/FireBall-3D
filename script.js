@@ -375,4 +375,26 @@ function doTreeLogic(){
 			}
 		}
 	});
+	var fromWhere;
+	treesToRemove.forEach( function ( element, index ) {
+		oneTree=treesToRemove[ index ];
+		fromWhere=treesInPath.indexOf(oneTree);
+		treesInPath.splice(fromWhere,1);
+		treesPool.push(oneTree);
+		oneTree.visible=false;
+		console.log("remove tree");
+	});
 }
+function doExplosionLogic(){
+	if(!particles.visible)return;
+	for (var i = 0; i < particleCount; i ++ ) {
+		particleGeometry.vertices[i].multiplyScalar(explosionPower);
+	}
+	if(explosionPower>1.005){
+		explosionPower-=0.001;
+	}else{
+		particles.visible=false;
+	}
+	particleGeometry.verticesNeedUpdate = true;
+}
+

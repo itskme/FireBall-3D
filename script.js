@@ -427,3 +427,18 @@ function onWindowResize() {
 	camera.updateProjectionMatrix();
 }
 
+function gameOver () {
+    var gameOverScreen = document.createElement('div');
+    gameOverScreen.style.position = 'absolute';
+    gameOverScreen.style.width = '100%';
+    gameOverScreen.style.height = '100%';
+    gameOverScreen.style.top = '0px';
+    gameOverScreen.style.left = '0px';
+    gameOverScreen.style.background = 'rgba(0, 0, 0, 0.5)';
+    gameOverScreen.style.color = 'white';
+    gameOverScreen.style.fontSize = '36px';
+    gameOverScreen.style.textAlign = 'center';
+    gameOverScreen.style.paddingTop = '200px';
+    gameOverScreen.innerHTML = 'Game Over! Your score: ' + score;
+    document.body.appendChild(gameOverScreen);
+}
